@@ -9,7 +9,7 @@
 namespace graph {
 	template<class Graph>
 	inline void readXGMMLFile(const std::string &filename, Graph &g) {
-		typedef typename boost::graph_traits<Graph>::vertex_descriptor V;
+		typedef typename Graph::vertex_descriptor V;
 		boost::property_tree::ptree pt;
 		std::map<int,V> map;
 

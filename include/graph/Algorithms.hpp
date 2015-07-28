@@ -97,7 +97,7 @@ namespace graph {
 	 */
 	template<class Graph>
 	inline void filterComponents(const Graph &g, int min_size, Graph &out) {
-		typedef typename boost::graph_traits<Graph>::vertex_descriptor V;
+		typedef typename Graph::vertex_descriptor V;
 
 		std::vector<V> comp;
 		connectedComponents(g, comp);
@@ -153,7 +153,7 @@ namespace graph {
 	 */
 	template<class Graph>
 	inline void largestComponent(const Graph &g, Graph &out) {
-		typedef typename boost::graph_traits<Graph>::vertex_descriptor V;
+		typedef typename Graph::vertex_descriptor V;
 		std::vector<V> indices;
 		largestComponentIndices(g, indices);
 		subgraph(g, indices, out);
@@ -165,7 +165,7 @@ namespace graph {
 	 */
 	template<class Graph>
 	inline void randomizeEndpoints(Graph &g, int count) {
-		typedef typename boost::graph_traits<Graph>::vertex_descriptor V;
+		typedef typename Graph::vertex_descriptor V;
 		std::vector<std::pair<V,V>> edges;
 		get_edges(g, edges);
 
