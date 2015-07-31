@@ -61,10 +61,7 @@ namespace graph {
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			for(size_t j = i+1; j < g.vertexCount(); ++j) {
 				if(g.hasEdge(i, j)) {
-					file << "\t<edge source=\"" << i+1 << "\" target=\"" << j+1 << "\" label=\"\">\n";
-					file << "\t\t<att name=\"exceptions\" type=\"integer\" value=\"";
-					file << g.edge(i, j).weight << "\" />\n";
-					file << "\t</edge>\n";
+					file << "\t<edge source=\"" << i+1 << "\" target=\"" << j+1 << "\" label=\"\" />\n";
 				}
 			}
 		}

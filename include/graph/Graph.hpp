@@ -9,9 +9,7 @@ namespace graph {
 		std::string label;
 	};
 
-	struct Edge {
-		int weight;
-	};
+	struct Edge { };
 
 	template<class vertex_type = Vertex, class edge_type = Edge>
 	class Graph {
