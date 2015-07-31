@@ -35,6 +35,7 @@ namespace graph {
 		out = G(indices.size());
 
 		for(size_t i = 0; i < indices.size(); ++i) {
+			out.node(i) = g.node(indices[i]);
 			out.node(i).label = g.node(indices[i]).label;
 
 			for(size_t j = i+1; j < indices.size(); ++j) {
@@ -46,7 +47,7 @@ namespace graph {
 
 		for(size_t i = 0; i < indices.size(); ++i) {
 			for(size_t j = 0; j < indices.size(); ++j) {
-				out.edge(i, j).weight = g.edge(indices[i], indices[j]).weight;
+				out.edge(i, j) = g.edge(indices[i], indices[j]);
 			}
 		}
 	}
@@ -86,7 +87,6 @@ namespace graph {
 						}
 					}
 				}
-
 			}
 
 			cur_comp++;
