@@ -12,11 +12,11 @@
 #include <graph/GraphException.hpp>
 
 namespace graph {
-	template<class Graph>
+	template<class G>
 	inline void readSimilarityFile(
 		const std::string &filename,
-		const Graph &g1,
-		const Graph &g2,
+		const G &g1,
+		const G &g2,
 		SimilarityMatrix &sim,
 		float min_value = 0.0f,
 		float max_value = 1.0f
@@ -28,16 +28,16 @@ namespace graph {
 		std::map<std::string,int> map1, map2;
 
 		// Make map of all node labels
-		for(size_t i = 0; i < num_vertices(g1); ++i) {
-			map1[g1[i].label] = i;
+		for(size_t i = 0; i < g1.vertexCount(); ++i) {
+			map1[g1.node(i).label] = i;
 		}
 
-		for(size_t i = 0; i < num_vertices(g2); ++i) {
-			map2[g2[i].label] = i;
+		for(size_t i = 0; i < g2.vertexCount(); ++i) {
+			map2[g2.node(i).label] = i;
 		}
 
 		// Zero similarity matrix
-		sim.resize(num_vertices(g1), num_vertices(g2));
+		sim.resize(g1.vertexCount(), g2.vertexCount());
 		for(auto it1 = sim.begin1(); it1 != sim.end1(); ++it1) {
 			std::fill(it1.begin(), it1.end(), 0.0f);
 		}

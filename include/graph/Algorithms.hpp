@@ -8,43 +8,45 @@
 #include <graph/Graph.hpp>
 
 namespace graph {
-	template<class Graph, class V>
-	inline void get_edges(const Graph &g, std::vector<std::pair<V,V>> &out) {
+	template<class G, class V>
+	inline void get_edges(const G &g, std::vector<std::pair<V,V>> &out) {
 		out.clear();
-		for(auto it = edges(g); it.first != it.second; ++it.first) {
-			V u = source(*it.first, g);
-			V v = target(*it.first, g);
-			out.push_back(std::pair<V,V>(u, v));
+		for(V u = 0; u < g.vertexCount(); ++u) {
+			for(V v = u+1; v < g.vertexCount(); ++v) {
+				if(g.hasEdge(u, v)) {
+					out.push_back(std::pair<V,V>(u, v));
+				}
+			}
 		}
 	}
 
-	template<class Graph, class V>
-	inline void add_edges(const std::vector<std::pair<V,V>> &in, Graph &g) {
+	template<class G, class V>
+	inline void add_edges(const std::vector<std::pair<V,V>> &in, G &g) {
 		for(auto &e : in) {
-			add_edge(e.first, e.second, g);
+			g.addEdge(e.first, e.second);
 		}
 	}
 
 	/**
 	 * Creates subgraph from list of vertices.
 	 */
-	template<class Graph, class V>
-	inline void subgraph(const Graph &g, const std::vector<V> &indices, Graph &out) {
-		out = Graph(indices.size());
+	template<class G, class V>
+	inline void subgraph(const G &g, const std::vector<V> &indices, G &out) {
+		out = G(indices.size());
 
 		for(size_t i = 0; i < indices.size(); ++i) {
-			out[i].label = g[indices[i]].label;
+			out.node(i).label = g.node(indices[i]).label;
 
 			for(size_t j = i+1; j < indices.size(); ++j) {
-				if(has_edge(indices[i], indices[j], g)) {
-					add_edge(i, j, out);
+				if(g.hasEdge(indices[i], indices[j])) {
+					out.addEdge(i, j);
 				}
 			}
 		}
 
 		for(size_t i = 0; i < indices.size(); ++i) {
 			for(size_t j = 0; j < indices.size(); ++j) {
-				out[edge(i, j, out).first].weight = g[edge(indices[i], indices[j], g).first].weight;
+				out.edge(i, j).weight = g.edge(indices[i], indices[j]).weight;
 			}
 		}
 	}
@@ -52,17 +54,17 @@ namespace graph {
 	/**
 	 * Returns mapping from vertices to connected components.
 	 */
-	template<class Graph, class V>
-	inline void connectedComponents(const Graph &g, std::vector<V> &comp) {
-		comp.resize(num_vertices(g));
+	template<class G, class V>
+	inline void connectedComponents(const G &g, std::vector<V> &comp) {
+		comp.resize(g.vertexCount());
 		std::stack<V> stack;
 
-		std::vector<bool> marked(num_vertices(g), false);
+		std::vector<bool> marked(g.vertexCount(), false);
 
 		size_t covered = 0;
 		int cur_comp = 0;
-		while(covered < num_vertices(g)) {
-			for(size_t i = 0; i < num_vertices(g); ++i) {
+		while(covered < g.vertexCount()) {
+			for(size_t i = 0; i < g.vertexCount(); ++i) {
 				if(marked[i] == false) {
 					stack.push(i);
 					break;
@@ -78,8 +80,8 @@ namespace graph {
 					covered++;
 					comp[v] = cur_comp;
 
-					for(size_t u = 0; u < num_vertices(g); ++u) {
-						if(has_edge(u, v, g)) {
+					for(size_t u = 0; u < g.vertexCount(); ++u) {
+						if(g.hasEdge(u, v)) {
 							stack.push(u);
 						}
 					}
@@ -95,21 +97,21 @@ namespace graph {
 	 * Creates new graph containing only vertices in connected 
 	 * components with at least min_size vertices.
 	 */
-	template<class Graph>
-	inline void filterComponents(const Graph &g, int min_size, Graph &out) {
-		typedef typename Graph::vertex_descriptor V;
+	template<class G>
+	inline void filterComponents(const G &g, int min_size, G &out) {
+		typedef typename G::vertex_descriptor V;
 
 		std::vector<V> comp;
 		connectedComponents(g, comp);
 
-		std::vector<int> count(num_vertices(g), 0);
+		std::vector<int> count(g.vertexCount(), 0);
 		std::vector<V> keep;
 		
 		for(auto i : comp) {
 			count[i]++;
 		}
 
-		for(size_t i = 0; i < num_vertices(g); ++i) {
+		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			if(count[comp[i]] >= min_size) {
 				keep.push_back(i);
 			}
@@ -121,12 +123,12 @@ namespace graph {
 	/**
 	 * Returns list of vertices contained in largest connected component.
 	 */
-	template<class Graph, class V>
-	inline void largestComponentIndices(const Graph &g, std::vector<V> &indices) {
+	template<class G, class V>
+	inline void largestComponentIndices(const G &g, std::vector<V> &indices) {
 		std::vector<V> comp;
 		connectedComponents(g, comp);
 
-		std::vector<int> count(num_vertices(g), 0);
+		std::vector<int> count(g.vertexCount(), 0);
 		indices.clear();
 
 		for(auto i : comp) {
@@ -134,13 +136,13 @@ namespace graph {
 		}
 
 		size_t largest = 0;
-		for(size_t i = 0; i < num_vertices(g); ++i) {
+		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			if(count[i] > count[largest]) {
 				largest = i;
 			}
 		}
 
-		for(size_t i = 0; i < num_vertices(g); ++i) {
+		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			if(comp[i] == largest) {
 				indices.push_back(i);
 			}
@@ -151,9 +153,9 @@ namespace graph {
 	 * Creates new graph with only vertices contained in largest
 	 * connected component.
 	 */
-	template<class Graph>
-	inline void largestComponent(const Graph &g, Graph &out) {
-		typedef typename Graph::vertex_descriptor V;
+	template<class G>
+	inline void largestComponent(const G &g, G &out) {
+		typedef typename G::vertex_descriptor V;
 		std::vector<V> indices;
 		largestComponentIndices(g, indices);
 		subgraph(g, indices, out);
@@ -163,9 +165,9 @@ namespace graph {
 	 * Randomizes edges of graph creating new graph
 	 * with similar edge degree distribution.
 	 */
-	template<class Graph>
-	inline void randomizeEndpoints(Graph &g, int count) {
-		typedef typename Graph::vertex_descriptor V;
+	template<class G>
+	inline void randomizeEndpoints(G &g, int count) {
+		typedef typename G::vertex_descriptor V;
 		std::vector<std::pair<V,V>> edges;
 		get_edges(g, edges);
 
@@ -200,13 +202,13 @@ namespace graph {
 			if(a1 == b1 || a1 == b2
 			|| a2 == b1 || a2 == b2) continue;
 
-			if(has_edge(a1, b2, g) || has_edge(b1, a2, g)) continue;
+			if(g.hasEdge(a1, b2) || g.hasEdge(b1, a2)) continue;
 
-			remove_edge(a1, a2, g);
-			remove_edge(b1, b2, g);
+			g.removeEdge(a1, a2);
+			g.removeEdge(b1, b2);
 
-			add_edge(a1, b2, g);
-			add_edge(b1, a2, g);
+			g.addEdge(a1, b2);
+			g.addEdge(b1, a2);
 
 			edges[e1] = std::make_pair(a1, b2);
 			edges[e2] = std::make_pair(b1, a2);

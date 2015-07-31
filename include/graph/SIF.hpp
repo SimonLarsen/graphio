@@ -8,8 +8,8 @@
 #include <boost/algorithm/string.hpp>
 
 namespace graph {
-	template<class Graph>
-	inline void readSIFFile(const std::string &filename, Graph &g) {
+	template<class G>
+	inline void readSIFFile(const std::string &filename, G &g) {
 		std::ifstream file;
 		std::string line;
 		std::vector<std::string> parts;
@@ -34,11 +34,11 @@ namespace graph {
 			}
 		}
 
-		g = Graph(map.size());
+		g = G(map.size());
 		
 		// Set vertex labels
 		for(auto it = map.begin(); it != map.end(); ++it) {
-			g[it->second].label = it->first;
+			g.node(it->second).label = it->first;
 		}
 
 		// Add edges
@@ -49,25 +49,25 @@ namespace graph {
 			int id1 = map[parts[0]];
 			int id2 = map[parts[2]];
 
-			add_edge(id1, id2, g);
+			g.addEdge(id1, id2);
 		}
 	}
 
-	template<class Graph>
-	inline void writeSIFFile(const Graph &g, const std::string &filename) {
+	template<class G>
+	inline void writeSIFFile(const G &g, const std::string &filename) {
 		std::ofstream file(filename);
 
-		for(size_t i = 0; i < num_vertices(g); ++i) {
-			for(size_t j = i+1; j < num_vertices(g); ++j) {
-				if(has_edge(i, j, g)) {
-					file << g[i].label << " ? " << g[j].label << "\n";
+		for(size_t i = 0; i < g.vertexCount(); ++i) {
+			for(size_t j = i+1; j < g.vertexCount(); ++j) {
+				if(g.hasEdge(i, j)) {
+					file << g.node(i).label << " ? " << g.node(j).label << "\n";
 				}
 			}
 		}
 
-		for(size_t i = 0; i < num_vertices(g); ++i) {
-			if(out_degree(i, g) == 0) {
-				file << g[i].label << "\n";
+		for(size_t i = 0; i < g.vertexCount(); ++i) {
+			if(g.degree(i) == 0) {
+				file << g.node(i).label << "\n";
 			}
 		}
 	}

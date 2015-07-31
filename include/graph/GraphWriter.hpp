@@ -10,8 +10,8 @@
 #include <graph/GraphTypes.hpp>
 
 namespace graph {
-	template<typename Graph>
-	inline void writeGraph(const Graph &g, const std::string &filename) {
+	template<typename G>
+	inline void writeGraph(const G &g, const std::string &filename) {
 		Type type = graphFileType(filename);
 
 		switch(type) {

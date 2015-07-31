@@ -10,8 +10,8 @@
 #include <graph/Tab.hpp>
 
 namespace graph {
-	template<typename Graph>
-	inline void readGraph(const std::string &filename, Graph &g) {
+	template<typename G>
+	inline void readGraph(const std::string &filename, G &g) {
 		Type type = graphFileType(filename);
 
 		switch(type) {

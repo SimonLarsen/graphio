@@ -21,8 +21,8 @@ namespace graph {
 		}
 	}
 
-	template<class Graph>
-	inline void readLEDAFile(const std::string &filename, Graph &g) {
+	template<class G>
+	inline void readLEDAFile(const std::string &filename, G &g) {
 		std::string line;
 		size_t n, m;
 		std::ifstream file(filename);
@@ -48,7 +48,7 @@ namespace graph {
 		LEDAReadLine(file, line);
 		n = boost::lexical_cast<size_t>(line);
 
-		g = Graph(n);
+		g = G(n);
 
 		// Read nodes
 		for(size_t i = 0; i < n; ++i) {
@@ -61,7 +61,7 @@ namespace graph {
 				throw GraphException("Malformed node label: " + line);
 			}
 
-			g[i].label = line.substr(begin, end-begin);
+			g.node(i).label = line.substr(begin, end-begin);
 		}
 
 		// Edge count
@@ -76,12 +76,12 @@ namespace graph {
 			boost::split(parts, line, boost::is_any_of(" \t"));
 			int u = boost::lexical_cast<int>(parts[0]) - 1;
 			int v = boost::lexical_cast<int>(parts[1]) - 1;
-			add_edge(u, v, g);
+			g.addEdge(u, v);
 		}
 	}
 
-	template<class Graph>
-	inline void writeLEDAFile(const Graph &g, const std::string &filename) {
+	template<class G>
+	inline void writeLEDAFile(const G &g, const std::string &filename) {
 		std::ofstream file(filename);
 
 		file << "LEDA.GRAPH" << std::endl;
@@ -89,15 +89,15 @@ namespace graph {
 		file << "string" << std::endl;
 		file << "-2" << std::endl;
 
-		file << num_vertices(g) << std::endl;
-		for(size_t i = 0; i < num_vertices(g); ++i) {
-			file << "|{" << g[i].label << "}|" << std::endl;
+		file << g.vertexCount() << std::endl;
+		for(size_t i = 0; i < g.vertexCount(); ++i) {
+			file << "|{" << g.node(i).label << "}|" << std::endl;
 		}
 
-		file << num_edges(g) << std::endl;
-		for(size_t i = 0; i < num_vertices(g); ++i) {
-			for(size_t j = i+1; j < num_vertices(g); ++j) {
-				if(has_edge(i, j, g)) {
+		file << g.edgeCount() << std::endl;
+		for(size_t i = 0; i < g.vertexCount(); ++i) {
+			for(size_t j = i+1; j < g.vertexCount(); ++j) {
+				if(g.hasEdge(i, j)) {
 					file << i+1 << " " << j+1 << " 0 |{}|\n";
 				}
 			}

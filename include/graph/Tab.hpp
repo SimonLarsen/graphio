@@ -8,8 +8,8 @@
 #include <boost/algorithm/string.hpp>
 
 namespace graph {
-	template<class Graph>
-	inline void readTabFile(const std::string &filename, Graph &g) {
+	template<class G>
+	inline void readTabFile(const std::string &filename, G &g) {
 		std::ifstream file;
 		std::string line;
 		std::vector<std::string> parts;
@@ -38,11 +38,11 @@ namespace graph {
 			}
 		}
 
-		g = Graph(map.size());
+		g = G(map.size());
 		
 		// Set vertex labels
 		for(auto it = map.begin(); it != map.end(); ++it) {
-			g[it->second].label = it->first;
+			g.node(it->second).label = it->first;
 		}
 
 		// Add edges
@@ -54,19 +54,19 @@ namespace graph {
 			int id1 = map[parts[0]];
 			int id2 = map[parts[1]];
 
-			add_edge(id1, id2, g);
+			g.addEdge(id1, id2);
 		}
 	}
 
-	template<class Graph>
-	inline void writeTabFile(const Graph &g, const std::string &filename) {
+	template<class G>
+	inline void writeTabFile(const G &g, const std::string &filename) {
 		std::ofstream file(filename);
 
 		file << "INTERACTOR_A\tINTERACTOR_B\n";
-		for(size_t i = 0; i < num_vertices(g); ++i) {
-			for(size_t j = i+1; j < num_vertices(g); ++j) {
-				if(has_edge(i, j, g)) {
-					file << g[i].label << "\t" << g[j].label << "\n";
+		for(size_t i = 0; i < g.vertexCount(); ++i) {
+			for(size_t j = i+1; j < g.vertexCount(); ++j) {
+				if(g.hasEdge(i, j)) {
+					file << g.node(i).label << "\t" << g.node(j).label << "\n";
 				}
 			}
 		}
