@@ -36,7 +36,6 @@ namespace graph {
 
 		for(size_t i = 0; i < indices.size(); ++i) {
 			out.node(i) = g.node(indices[i]);
-			out.node(i).label = g.node(indices[i]).label;
 
 			for(size_t j = i+1; j < indices.size(); ++j) {
 				if(g.hasEdge(indices[i], indices[j])) {
