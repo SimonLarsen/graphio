@@ -17,9 +17,6 @@ namespace graph {
 
 		file.open(filename);
 
-		// Skip header line
-		std::getline(file, line);
-
 		// Map vertex labels to ids
 		int id = 0;
 		std::map<std::string, int>::iterator it1, it2;
@@ -62,7 +59,6 @@ namespace graph {
 	inline void writeTabFile(const G &g, const std::string &filename) {
 		std::ofstream file(filename);
 
-		file << "INTERACTOR_A\tINTERACTOR_B\n";
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			for(size_t j = i+1; j < g.vertexCount(); ++j) {
 				if(g.hasEdge(i, j)) {
