@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <boost/format.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 
@@ -41,8 +42,15 @@ namespace graph {
 		}
 	}
 
-	template<class G>
-	inline void writeXGMMLFile(const G &g, const std::string &filename) {
+	template<class G, typename VV, typename EV>
+	inline void writeXGMMLFile(
+		const G &g,
+		const std::string &filename,
+		const VV &vv,
+		const EV &ev
+	) {
+		using boost::format;
+
 		std::ofstream file(filename);
 		
 		file << "<?xml version=\"1.0\"?>\n";
@@ -55,14 +63,25 @@ namespace graph {
 		file << "directed=\"0\">\n";
 
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			file << "\t<node id=\"" << i+1 << "\" label=\"" << g.node(i).label << "\" />\n";
+			file << format("\t<node id=\"%d\" label=\"%s\">\n") % (i+1) % g.node(i).label;
+			for(size_t a = 0; a < vv.count(); ++a) {
+				file << format("\t\t<att name=\"%s\" type=\"%s\" value=\"%s\"/>\n")
+					% vv.name(a) % vv.type(a) % vv.value_str(g.vertex(i), a);
+			}
+			file << "\t</node>\n";
 		}
 
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			for(size_t j = i+1; j < g.vertexCount(); ++j) {
 				if(g.hasEdge(i, j)) {
-					file << "\t<edge source=\"" << i+1 << "\" target=\"" << j+1 << "\"";
-					file << " label=\"" << g.edge(i, j).label << "\" />\n";
+					file << format("\t<edge source=\"%d\" target=\"%d\" label=\"%s\">\n")
+						% (i+1) % (j+1) % g.edge(i, j).label;
+
+					for(size_t a = 0; a < ev.count(); ++a) {
+						file << format("\t\t<att name=\"%s\" type=\"%s\" value=\"%s\" />\n")
+							% ev.name(a) % ev.type(a) % ev.value_str(g.edge(i, j), a);
+					}
+					file << "\t</edge>\n";
 				}
 			}
 		}

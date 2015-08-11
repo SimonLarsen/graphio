@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <boost/format.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <graph/Graph.hpp>
@@ -88,6 +89,8 @@ namespace graph {
 
 	template<class G>
 	inline void writeLEDAFile(const G &g, const std::string &filename) {
+		using boost::format;
+
 		std::ofstream file(filename);
 
 		file << "LEDA.GRAPH" << std::endl;
@@ -97,15 +100,15 @@ namespace graph {
 
 		file << g.vertexCount() << std::endl;
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			file << "|{" << g.node(i).label << "}|" << std::endl;
+			file << format("|{%s}|\n") % g.node(i).label;
 		}
 
 		file << g.edgeCount() << std::endl;
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			for(size_t j = i+1; j < g.vertexCount(); ++j) {
 				if(g.hasEdge(i, j)) {
-					file << i+1 << " " << j+1 << " 0 ";
-					file << "|{" << g.edge(i, j).label << "}|\n";
+					file << format("%d %d 0 |{%s}|\n")
+						% (i+1) % (j+1) % g.edge(i, j).label;
 				}
 			}
 		}

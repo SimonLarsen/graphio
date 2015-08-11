@@ -8,10 +8,27 @@
 #include <graph/Tab.hpp>
 #include <graph/GraphException.hpp>
 #include <graph/GraphTypes.hpp>
+#include <graph/VertexVisitor.hpp>
+#include <graph/EdgeVisitor.hpp>
 
 namespace graph {
 	template<typename G>
-	inline void writeGraph(const G &g, const std::string &filename) {
+	inline void writeGraph(
+		const G &g,
+		const std::string &filename
+	) {
+		VertexVisitor vv;
+		EdgeVisitor ev;
+		writeGraph(g, filename, vv, ev);
+	}
+	
+	template<typename G, typename VV, typename EV>
+	inline void writeGraph(
+		const G &g,
+		const std::string &filename,
+		const VV &vv,
+		const EV &ev
+	) {
 		Type type = graphFileType(filename);
 
 		switch(type) {
@@ -22,7 +39,7 @@ namespace graph {
 				writeSIFFile(g, filename);
 				break;
 			case XGMML:
-				writeXGMMLFile(g, filename);
+				writeXGMMLFile(g, filename, vv, ev);
 				break;
 			case Tab:
 				writeTabFile(g, filename);
