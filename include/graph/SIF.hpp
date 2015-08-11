@@ -50,6 +50,7 @@ namespace graph {
 			int id2 = map[parts[2]];
 
 			g.addEdge(id1, id2);
+			g.edge(id1, id2).label = parts[1];
 		}
 	}
 
@@ -60,7 +61,13 @@ namespace graph {
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			for(size_t j = i+1; j < g.vertexCount(); ++j) {
 				if(g.hasEdge(i, j)) {
-					file << g.node(i).label << " ? " << g.node(j).label << "\n";
+					file << g.node(i).label << " ";
+					if(g.edge(i, j).label.length() > 0) {
+						file << g.edge(i, j).label;
+					} else {
+						file << "?";
+					}
+					file << " " << g.node(j).label << "\n";
 				}
 			}
 		}

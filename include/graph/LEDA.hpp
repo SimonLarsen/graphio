@@ -76,7 +76,13 @@ namespace graph {
 			boost::split(parts, line, boost::is_any_of(" \t"));
 			int u = boost::lexical_cast<int>(parts[0]) - 1;
 			int v = boost::lexical_cast<int>(parts[1]) - 1;
+
 			g.addEdge(u, v);
+
+			size_t begin = parts[3].find("|{") + 2;
+			size_t end = parts[3].find("}|");
+
+			g.edge(u, v).label = parts[3].substr(begin, end-begin);
 		}
 	}
 
@@ -98,7 +104,8 @@ namespace graph {
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			for(size_t j = i+1; j < g.vertexCount(); ++j) {
 				if(g.hasEdge(i, j)) {
-					file << i+1 << " " << j+1 << " 0 |{}|\n";
+					file << i+1 << " " << j+1 << " 0 ";
+					file << "|{" << g.edge(i, j).label << "}|\n";
 				}
 			}
 		}

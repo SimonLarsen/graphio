@@ -52,7 +52,12 @@ namespace graph {
 			int id2 = map[parts[1]];
 
 			g.addEdge(id1, id2);
+
+			if(parts.size() > 2) {
+				g.edge(id1, id2).label = parts[2];
+			}
 		}
+		file.close();
 	}
 
 	template<class G>
@@ -62,10 +67,15 @@ namespace graph {
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			for(size_t j = i+1; j < g.vertexCount(); ++j) {
 				if(g.hasEdge(i, j)) {
-					file << g.node(i).label << "\t" << g.node(j).label << "\n";
+					file << g.node(i).label << "\t" << g.node(j).label;
+					if(g.edge(i, j).label.length() > 0) {
+						file << "\t" << g.edge(i, j).label;
+					}
+					file << "\n";
 				}
 			}
 		}
+		file.close();
 	}
 }
 

@@ -28,8 +28,7 @@ namespace graph {
 			if(c.first == "node") {
 				int id = c.second.get<int>("<xmlattr>.id");
 				V v = map[id];
-				std::string label = c.second.get<std::string>("<xmlattr>.label");
-				g.node(v).label = label;
+				g.node(v).label = c.second.get<std::string>("<xmlattr>.label");
 			}
 			else if(c.first == "edge") {
 				int source = c.second.get<int>("<xmlattr>.source");
@@ -37,6 +36,7 @@ namespace graph {
 				V u = map[source];
 				V v = map[target];
 				g.addEdge(u, v);
+				g.edge(u, v).label = c.second.get<std::string>("<xmlattr>.label");
 			}
 		}
 	}
@@ -61,11 +61,13 @@ namespace graph {
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			for(size_t j = i+1; j < g.vertexCount(); ++j) {
 				if(g.hasEdge(i, j)) {
-					file << "\t<edge source=\"" << i+1 << "\" target=\"" << j+1 << "\" label=\"\" />\n";
+					file << "\t<edge source=\"" << i+1 << "\" target=\"" << j+1 << "\"";
+					file << " label=\"" << g.edge(i, j).label << "\" />\n";
 				}
 			}
 		}
-		file << "</graph>\n";
+		file << "</graph>";
+		file.close();
 	}
 }
 
