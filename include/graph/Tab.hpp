@@ -17,6 +17,9 @@ namespace graph {
 
 		file.open(filename);
 
+		// Skip header line
+		std::getline(file, line);
+
 		// Map vertex labels to ids
 		int id = 0;
 		std::map<std::string, int>::iterator it1, it2;
