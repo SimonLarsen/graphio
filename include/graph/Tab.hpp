@@ -60,9 +60,20 @@ namespace graph {
 		file.close();
 	}
 
-	template<class G>
-	inline void writeTabFile(const G &g, const std::string &filename) {
+	template<class G, typename VV, typename EV>
+	inline void writeTabFile(
+			const G &g,
+			const std::string &filename,
+			const VV &vv,
+			const EV &ev
+		) {
 		std::ofstream file(filename);
+
+		file << "INTERACTOR_A\tINTERACTOR_B\tlabel";
+		for(size_t a = 0; a < ev.count(); ++a) {
+			file << "\t" << ev.name(a);
+		}
+		file << "\n";
 
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			for(size_t j = i+1; j < g.vertexCount(); ++j) {
@@ -70,6 +81,11 @@ namespace graph {
 					file << g.node(i).label << "\t" << g.node(j).label;
 					if(g.edge(i, j).label.length() > 0) {
 						file << "\t" << g.edge(i, j).label;
+					} else {
+						file << "\tNA";
+					}
+					for(size_t a = 0; a < ev.count(); ++a) {
+						file << "\t" << ev.value_str(g.edge(i, j), a);
 					}
 					file << "\n";
 				}

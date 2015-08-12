@@ -42,7 +42,7 @@ namespace graph {
 				writeXGMMLFile(g, filename, vv, ev);
 				break;
 			case Tab:
-				writeTabFile(g, filename);
+				writeTabFile(g, filename, vv, ev);
 				break;
 			default:
 				throw GraphException("Unknown filetype for file: " + filename);
