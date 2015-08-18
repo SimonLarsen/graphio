@@ -8,6 +8,11 @@
 #include <graph/Graph.hpp>
 
 namespace graph {
+	/**
+	 * Get list of edges as vertex pairs.
+	 * \param g Graph
+	 * \param out Vector to fill
+	 */
 	template<class G, class V>
 	inline void get_edges(const G &g, std::vector<std::pair<V,V>> &out) {
 		out.clear();
@@ -20,6 +25,11 @@ namespace graph {
 		}
 	}
 
+	/**
+	 * Adds a list of vertex pairs 
+	 * \param in List of vertex pairs
+	 * \param g Graph
+	 */
 	template<class G, class V>
 	inline void add_edges(const std::vector<std::pair<V,V>> &in, G &g) {
 		for(auto &e : in) {
@@ -52,7 +62,12 @@ namespace graph {
 	}
 
 	/**
-	 * Returns mapping from vertices to connected components.
+	 * Finds connected components in graph.
+	 * Components are ordered 0, 1, 2, ...
+	 *
+	 * \param g Graph
+	 * \param comp Output buffer
+	 * \return List mapping each vertex to component
 	 */
 	template<class G, class V>
 	inline void connectedComponents(const G &g, std::vector<V> &comp) {
@@ -95,6 +110,10 @@ namespace graph {
 	/**
 	 * Creates new graph containing only vertices in connected 
 	 * components with at least min_size vertices.
+	 * 
+	 * \param g Graph
+	 * \param min_size Miniumum component size
+	 * \param out Output Output graph
 	 */
 	template<class G>
 	inline void filterComponents(const G &g, int min_size, G &out) {
@@ -120,7 +139,7 @@ namespace graph {
 	}
 
 	/**
-	 * Returns list of vertices contained in largest connected component.
+	 * Get list of vertices contained in largest connected component.
 	 */
 	template<class G, class V>
 	inline void largestComponentIndices(const G &g, std::vector<V> &indices) {
