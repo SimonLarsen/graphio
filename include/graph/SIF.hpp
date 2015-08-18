@@ -30,7 +30,7 @@ namespace graph {
 				map[parts[0]] = id;
 				id++;
 			}
-			if(it2 == map.end()) {
+			else if(it2 == map.end()) {
 				map[parts[2]] = id;
 				id++;
 			}
