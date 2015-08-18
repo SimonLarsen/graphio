@@ -24,7 +24,9 @@ namespace graph {
 		int id = 0;
 		std::map<std::string, int>::iterator it1, it2;
 		while(std::getline(file, line)) {
+			if(line.length() == 0) continue;
 			boost::split(parts, line, boost::is_any_of("\t"));
+
 			it1 = map.find(parts[0]);
 			it2 = map.find(parts[1]);
 
@@ -50,7 +52,9 @@ namespace graph {
 		file.open(filename);
 		std::getline(file, line);
 		while(std::getline(file, line)) {
+			if(line.length() == 0) continue;
 			boost::split(parts, line, boost::is_any_of("\t"));
+
 			int id1 = map[parts[0]];
 			int id2 = map[parts[1]];
 
