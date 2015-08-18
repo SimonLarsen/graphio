@@ -18,7 +18,7 @@ namespace graph {
 		out.clear();
 		for(V u = 0; u < num_vertices(g); ++u) {
 			for(auto it = out_edges(u, g); it.first != it.second; ++it.first) {
-				V v = *it.first;
+				V v = target(*it.first, g);
 				if(u <= v) {
 					out.push_back(std::pair<V,V>(u, v));
 				}
