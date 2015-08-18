@@ -37,10 +37,10 @@ namespace graph {
 		}
 
 		g = G(map.size());
-		
+
 		// Set vertex labels
 		for(auto it = map.begin(); it != map.end(); ++it) {
-			g.vertex(it->second).label = it->first;
+			g[it->second].label = it->first;
 		}
 
 		// Add edges
@@ -53,8 +53,8 @@ namespace graph {
 			int id1 = map[parts[0]];
 			int id2 = map[parts[2]];
 
-			auto e = g.addEdge(id1, id2);
-			g.edge(e).label = parts[1];
+			auto e = add_edge(id1, id2, g);
+			g[e.first].label = parts[1];
 		}
 	}
 
@@ -62,24 +62,25 @@ namespace graph {
 	inline void writeSIFFile(const G &g, const std::string &filename) {
 		std::ofstream file(filename);
 
-		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			for(auto it = boost::out_edges(i, g.graph()); it.first != it.second; ++it.first) {
-				size_t j = target(*it.first, g.graph());
+		for(size_t i = 0; i < num_vertices(g); ++i) {
+			for(auto it = out_edges(i, g); it.first != it.second; ++it.first) {
+				size_t j = target(*it.first, g);
+
 				if(i <= j) {
-					file << g.vertex(i).label << " ";
-					if(g.edge(*it.first).label.length() > 0) {
-						file << g.edge(*it.first).label;
+					file << g[i].label << " ";
+					if(g[*it.first].label.length() > 0) {
+						file << g[*it.first].label;
 					} else {
 						file << "?";
 					}
-					file << " " << g.vertex(j).label << "\n";
+					file << " " << g[j].label << "\n";
 				}
 			}
 		}
 
-		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			if(g.degree(i) == 0) {
-				file << g.vertex(i).label << "\n";
+		for(size_t i = 0; i < num_vertices(g); ++i) {
+			if(out_degree(i, g) == 0) {
+				file << g[i].label << "\n";
 			}
 		}
 	}

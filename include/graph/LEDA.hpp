@@ -62,7 +62,7 @@ namespace graph {
 				throw GraphException("Malformed node label: " + line);
 			}
 
-			g.vertex(i).label = line.substr(begin, end-begin);
+			g[i].label = line.substr(begin, end-begin);
 		}
 
 		// Edge count
@@ -81,8 +81,8 @@ namespace graph {
 			size_t begin = parts[3].find("|{") + 2;
 			size_t end = parts[3].find("}|");
 
-			auto e = g.addEdge(u, v);
-			g.edge(e).label = parts[3].substr(begin, end-begin);
+			auto e = add_edge(u, v, g);
+			g[e.first].label = parts[3].substr(begin, end-begin);
 
 		}
 	}
@@ -98,20 +98,20 @@ namespace graph {
 		file << "string" << std::endl;
 		file << "-2" << std::endl;
 
-		file << g.vertexCount() << std::endl;
-		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			file << format("|{%s}|\n") % g.vertex(i).label;
+		file << num_vertices(g) << std::endl;
+		for(size_t i = 0; i < num_vertices(g); ++i) {
+			file << format("|{%s}|\n") % g[i].label;
 		}
 
-		file << g.edgeCount() << std::endl;
+		file << num_edges(g) << std::endl;
 
-		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			for(auto it = boost::out_edges(i, g.graph()); it.first != it.second; ++it.first) {
-				size_t j = target(*it.first, g.graph());
+		for(size_t i = 0; i < num_vertices(g); ++i) {
+			for(auto it = out_edges(i, g); it.first != it.second; ++it.first) {
+				size_t j = target(*it.first, g);
 
 				if(i <= j) {
 					file << format("%d %d 0 |{%s}|\n")
-						% (i+1) % (j+1) % g.edge(*it.first).label;
+						% (i+1) % (j+1) % g[*it.first].label;
 				}
 			}
 		}

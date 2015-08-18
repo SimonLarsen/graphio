@@ -4,7 +4,7 @@
 #include <graph/GraphWriter.hpp>
 
 int main(int argc, const char *argv[]) {
-	graph::Graph<> g;
+	graph::Graph g;
 
 	if(argc != 3) {
 		std::cerr << "error: Invalid number of arguments." << std::endl;

@@ -29,15 +29,15 @@ namespace graph {
 			if(c.first == "node") {
 				int id = c.second.get<int>("<xmlattr>.id");
 				V v = map[id];
-				g.vertex(v).label = c.second.get<std::string>("<xmlattr>.label");
+				g[v].label = c.second.get<std::string>("<xmlattr>.label");
 			}
 			else if(c.first == "edge") {
 				int source = c.second.get<int>("<xmlattr>.source");
 				int target = c.second.get<int>("<xmlattr>.target");
 				V u = map[source];
 				V v = map[target];
-				auto e = g.addEdge(u, v);
-				g.edge(e).label = c.second.get<std::string>("<xmlattr>.label");
+				auto e = add_edge(u, v, g);
+				g[e.first].label = c.second.get<std::string>("<xmlattr>.label");
 			}
 		}
 	}
@@ -62,26 +62,26 @@ namespace graph {
 		file << "xmlns=\"http://www.cs.rpi.edu/XGMML\" ";
 		file << "directed=\"0\">\n";
 
-		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			file << format("\t<node id=\"%d\" label=\"%s\">\n") % (i+1) % g.vertex(i).label;
+		for(size_t i = 0; i < num_vertices(g); ++i) {
+			file << format("\t<node id=\"%d\" label=\"%s\">\n") % (i+1) % g[i].label;
 			for(size_t a = 0; a < vv.count(); ++a) {
 				file << format("\t\t<att name=\"%s\" type=\"%s\" value=\"%s\"/>\n")
-					% vv.name(a) % vv.type(a) % vv.value_str(g.vertex(i), a);
+					% vv.name(a) % vv.type(a) % vv.value_str(g[i], a);
 			}
 			file << "\t</node>\n";
 		}
 
-		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			for(auto it = boost::out_edges(i, g.graph()); it.first != it.second; ++it.first) {
-				size_t j = target(*it.first, g.graph());
+		for(size_t i = 0; i < num_vertices(g); ++i) {
+			for(auto it = out_edges(i, g); it.first != it.second; ++it.first) {
+				size_t j = target(*it.first, g);
 
 				if(i <= j) {
 					file << format("\t<edge source=\"%d\" target=\"%d\" label=\"%s\">\n")
-						% (i+1) % (j+1) % g.edge(*it.first).label;
+						% (i+1) % (j+1) % g[*it.first].label;
 
 					for(size_t a = 0; a < ev.count(); ++a) {
 						file << format("\t\t<att name=\"%s\" type=\"%s\" value=\"%s\" />\n")
-							% ev.name(a) % ev.type(a) % ev.value_str(g.edge(*it.first), a);
+							% ev.name(a) % ev.type(a) % ev.value_str(g[*it.first], a);
 					}
 					file << "\t</edge>\n";
 				}

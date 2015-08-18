@@ -44,7 +44,7 @@ namespace graph {
 		
 		// Set vertex labels
 		for(auto it = map.begin(); it != map.end(); ++it) {
-			g.vertex(it->second).label = it->first;
+			g[it->second].label = it->first;
 		}
 
 		// Add edges
@@ -58,10 +58,10 @@ namespace graph {
 			int id1 = map[parts[0]];
 			int id2 = map[parts[1]];
 
-			auto e = g.addEdge(id1, id2);
+			auto e = add_edge(id1, id2, g);
 
 			if(parts.size() > 2) {
-				g.edge(e).label = parts[2];
+				g[e.first].label = parts[2];
 			}
 		}
 		file.close();
@@ -82,19 +82,19 @@ namespace graph {
 		}
 		file << "\n";
 
-		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			for(auto it = boost::out_edges(i, g.graph()); it.first != it.second; ++it.first) {
-				size_t j = target(*it.first, g.graph());
+		for(size_t i = 0; i < num_vertices(g); ++i) {
+			for(auto it = out_edges(i, g); it.first != it.second; ++it.first) {
+				size_t j = target(*it.first, g);
 
 				if(i <= j) {
-					file << g.vertex(i).label << "\t" << g.vertex(j).label;
-					if(g.edge(*it.first).label.length() > 0) {
-						file << "\t" << g.edge(*it.first).label;
+					file << g[i].label << "\t" << g[j].label;
+					if(g[*it.first].label.length() > 0) {
+						file << "\t" << g[*it.first].label;
 					} else {
 						file << "\tNA";
 					}
 					for(size_t a = 0; a < ev.count(); ++a) {
-						file << "\t" << ev.value_str(g.edge(*it.first), a);
+						file << "\t" << ev.value_str(g[*it.first], a);
 					}
 					file << "\n";
 				}

@@ -16,8 +16,8 @@ namespace graph {
 	template<class G, class V>
 	inline void get_edges(const G &g, std::vector<std::pair<V,V>> &out) {
 		out.clear();
-		for(V u = 0; u < g.vertexCount(); ++u) {
-			for(auto it = g.getAdjacent(u); it.first != it.second; ++it.first) {
+		for(V u = 0; u < num_vertices(g); ++u) {
+			for(auto it = out_edges(u, g); it.first != it.second; ++it.first) {
 				V v = *it.first;
 				if(u <= v) {
 					out.push_back(std::pair<V,V>(u, v));
@@ -34,13 +34,13 @@ namespace graph {
 	template<class G, class V>
 	inline void add_edges(const std::vector<std::pair<V,V>> &in, G &g) {
 		for(auto &e : in) {
-			g.addEdge(e.first, e.second);
+			add_edge(e.first, e.second, g);
 		}
 	}
 
 	template<class G, class V>
 	inline bool has_edge(const G &g, V u, V v) {
-		for(auto it = g.getAdjacent(u); it.first != it.second; ++it.first) {
+		for(auto it = out_edges(u, g); it.first != it.second; ++it.first) {
 			if(*it.first == v) return true;
 		}
 
@@ -55,12 +55,12 @@ namespace graph {
 		out = G(indices.size());
 
 		for(size_t i = 0; i < indices.size(); ++i) {
-			out.node(i) = g.node(indices[i]);
+			out.node(i) = g[indices[i]];
 
-			for(auto it = boost::out_edges(i, g.graph()); it.first != it.second; ++it.first) {
-				size_t j = target(*it.first, g.graph());
+			for(auto it = out_edges(i, g); it.first != it.second; ++it.first) {
+				size_t j = target(*it.first, g);
 				if(i <= j) {
-					out.addEdge(i, j, g.edge(*it.first));
+					out.addEdge(i, j, g[*it.first]);
 				}
 			}
 		}
@@ -76,15 +76,15 @@ namespace graph {
 	 */
 	template<class G, class V>
 	inline void connectedComponents(const G &g, std::vector<V> &comp) {
-		comp.resize(g.vertexCount());
+		comp.resize(num_vertices(g));
 		std::stack<V> stack;
 
-		std::vector<bool> marked(g.vertexCount(), false);
+		std::vector<bool> marked(num_vertices(g), false);
 
 		size_t covered = 0;
 		int cur_comp = 0;
-		while(covered < g.vertexCount()) {
-			for(size_t i = 0; i < g.vertexCount(); ++i) {
+		while(covered < num_vertices(g)) {
+			for(size_t i = 0; i < num_vertices(g); ++i) {
 				if(marked[i] == false) {
 					stack.push(i);
 					break;
@@ -100,7 +100,7 @@ namespace graph {
 					covered++;
 					comp[u] = cur_comp;
 
-					for(auto it = g.getAdjacent(u); it.first != it.second; ++it.first) {
+					for(auto it = out_edges(u, g); it.first != it.second; ++it.first) {
 						stack.push(*it.first);
 					}
 				}
@@ -125,14 +125,14 @@ namespace graph {
 		std::vector<V> comp;
 		connectedComponents(g, comp);
 
-		std::vector<int> count(g.vertexCount(), 0);
+		std::vector<int> count(num_vertices(g), 0);
 		std::vector<V> keep;
 		
 		for(auto i : comp) {
 			count[i]++;
 		}
 
-		for(size_t i = 0; i < g.vertexCount(); ++i) {
+		for(size_t i = 0; i < num_vertices(g); ++i) {
 			if(count[comp[i]] >= min_size) {
 				keep.push_back(i);
 			}
@@ -149,7 +149,7 @@ namespace graph {
 		std::vector<V> comp;
 		connectedComponents(g, comp);
 
-		std::vector<int> count(g.vertexCount(), 0);
+		std::vector<int> count(num_vertices(g), 0);
 		indices.clear();
 
 		for(auto i : comp) {
@@ -157,13 +157,13 @@ namespace graph {
 		}
 
 		size_t largest = 0;
-		for(size_t i = 0; i < g.vertexCount(); ++i) {
+		for(size_t i = 0; i < num_vertices(g); ++i) {
 			if(count[i] > count[largest]) {
 				largest = i;
 			}
 		}
 
-		for(size_t i = 0; i < g.vertexCount(); ++i) {
+		for(size_t i = 0; i < num_vertices(g); ++i) {
 			if(comp[i] == largest) {
 				indices.push_back(i);
 			}
@@ -225,11 +225,11 @@ namespace graph {
 
 			if(has_edge(g, a1, b2) || has_edge(g, b1, a2)) continue;
 
-			g.removeEdge(a1, a2);
-			g.removeEdge(b1, b2);
+			remove_edge(a1, a2, g);
+			remove_edge(b1, b2, g);
 
-			g.addEdge(a1, b2);
-			g.addEdge(b1, a2);
+			add_edge(a1, b2, g);
+			add_edge(b1, a2, g);
 
 			edges[e1] = std::make_pair(a1, b2);
 			edges[e2] = std::make_pair(b1, a2);
