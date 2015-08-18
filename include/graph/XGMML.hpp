@@ -29,7 +29,7 @@ namespace graph {
 			if(c.first == "node") {
 				int id = c.second.get<int>("<xmlattr>.id");
 				V v = map[id];
-				g.node(v).label = c.second.get<std::string>("<xmlattr>.label");
+				g.vertex(v).label = c.second.get<std::string>("<xmlattr>.label");
 			}
 			else if(c.first == "edge") {
 				int source = c.second.get<int>("<xmlattr>.source");
@@ -63,7 +63,7 @@ namespace graph {
 		file << "directed=\"0\">\n";
 
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			file << format("\t<node id=\"%d\" label=\"%s\">\n") % (i+1) % g.node(i).label;
+			file << format("\t<node id=\"%d\" label=\"%s\">\n") % (i+1) % g.vertex(i).label;
 			for(size_t a = 0; a < vv.count(); ++a) {
 				file << format("\t\t<att name=\"%s\" type=\"%s\" value=\"%s\"/>\n")
 					% vv.name(a) % vv.type(a) % vv.value_str(g.vertex(i), a);

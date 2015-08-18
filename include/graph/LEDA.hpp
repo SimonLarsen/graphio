@@ -62,7 +62,7 @@ namespace graph {
 				throw GraphException("Malformed node label: " + line);
 			}
 
-			g.node(i).label = line.substr(begin, end-begin);
+			g.vertex(i).label = line.substr(begin, end-begin);
 		}
 
 		// Edge count
@@ -100,7 +100,7 @@ namespace graph {
 
 		file << g.vertexCount() << std::endl;
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			file << format("|{%s}|\n") % g.node(i).label;
+			file << format("|{%s}|\n") % g.vertex(i).label;
 		}
 
 		file << g.edgeCount() << std::endl;

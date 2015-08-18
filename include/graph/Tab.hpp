@@ -44,7 +44,7 @@ namespace graph {
 		
 		// Set vertex labels
 		for(auto it = map.begin(); it != map.end(); ++it) {
-			g.node(it->second).label = it->first;
+			g.vertex(it->second).label = it->first;
 		}
 
 		// Add edges
@@ -87,7 +87,7 @@ namespace graph {
 				size_t j = target(*it.first, g.graph());
 
 				if(i <= j) {
-					file << g.node(i).label << "\t" << g.node(j).label;
+					file << g.vertex(i).label << "\t" << g.vertex(j).label;
 					if(g.edge(*it.first).label.length() > 0) {
 						file << "\t" << g.edge(*it.first).label;
 					} else {

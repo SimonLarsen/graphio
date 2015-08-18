@@ -40,7 +40,7 @@ namespace graph {
 		
 		// Set vertex labels
 		for(auto it = map.begin(); it != map.end(); ++it) {
-			g.node(it->second).label = it->first;
+			g.vertex(it->second).label = it->first;
 		}
 
 		// Add edges
@@ -66,20 +66,20 @@ namespace graph {
 			for(auto it = boost::out_edges(i, g.graph()); it.first != it.second; ++it.first) {
 				size_t j = target(*it.first, g.graph());
 				if(i <= j) {
-					file << g.node(i).label << " ";
+					file << g.vertex(i).label << " ";
 					if(g.edge(*it.first).label.length() > 0) {
 						file << g.edge(*it.first).label;
 					} else {
 						file << "?";
 					}
-					file << " " << g.node(j).label << "\n";
+					file << " " << g.vertex(j).label << "\n";
 				}
 			}
 		}
 
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
 			if(g.degree(i) == 0) {
-				file << g.node(i).label << "\n";
+				file << g.vertex(i).label << "\n";
 			}
 		}
 	}

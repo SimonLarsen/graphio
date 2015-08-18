@@ -71,14 +71,6 @@ namespace graph {
 			inline const vertex_type &vertex(vertex_descriptor u) const {
 				return g[u]; 
 			}
-			
-			inline vertex_type &node(vertex_descriptor u) {
-				return vertex(u);
-			}
-
-			inline const vertex_type &node(vertex_descriptor u) const {
-				return vertex(u);
-			}
 
 			inline std::pair<adjacency_iterator, adjacency_iterator>
 			getAdjacent(vertex_descriptor u) const {
