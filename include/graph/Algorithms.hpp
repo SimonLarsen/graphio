@@ -57,17 +57,11 @@ namespace graph {
 		for(size_t i = 0; i < indices.size(); ++i) {
 			out.node(i) = g.node(indices[i]);
 
-			for(auto it = g.getAdjacent(i); it.first != it.second; ++it.first) {
-				size_t j = *it.first;
+			for(auto it = boost::out_edges(i, g.graph()); it.first != it.second; ++it.first) {
+				size_t j = target(*it.first, g.graph());
 				if(i <= j) {
-					out.addEdge(i, j);
+					out.addEdge(i, j, g.edge(*it.first));
 				}
-			}
-		}
-
-		for(size_t i = 0; i < indices.size(); ++i) {
-			for(size_t j = 0; j < indices.size(); ++j) {
-				out.edge(i, j) = g.edge(indices[i], indices[j]);
 			}
 		}
 	}

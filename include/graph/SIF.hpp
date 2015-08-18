@@ -53,8 +53,8 @@ namespace graph {
 			int id1 = map[parts[0]];
 			int id2 = map[parts[2]];
 
-			g.addEdge(id1, id2);
-			g.edge(id1, id2).label = parts[1];
+			auto e = g.addEdge(id1, id2);
+			g.edge(e).label = parts[1];
 		}
 	}
 
@@ -63,12 +63,12 @@ namespace graph {
 		std::ofstream file(filename);
 
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			for(auto it = g.getAdjacent(i); it.first != it.second; ++it.first) {
-				size_t j = *it.first;
+			for(auto it = boost::out_edges(i, g.graph()); it.first != it.second; ++it.first) {
+				size_t j = target(*it.first, g.graph());
 				if(i <= j) {
 					file << g.node(i).label << " ";
-					if(g.edge(i, j).label.length() > 0) {
-						file << g.edge(i, j).label;
+					if(g.edge(*it.first).label.length() > 0) {
+						file << g.edge(*it.first).label;
 					} else {
 						file << "?";
 					}

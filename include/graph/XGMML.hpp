@@ -36,8 +36,8 @@ namespace graph {
 				int target = c.second.get<int>("<xmlattr>.target");
 				V u = map[source];
 				V v = map[target];
-				g.addEdge(u, v);
-				g.edge(u, v).label = c.second.get<std::string>("<xmlattr>.label");
+				auto e = g.addEdge(u, v);
+				g.edge(e).label = c.second.get<std::string>("<xmlattr>.label");
 			}
 		}
 	}
@@ -72,16 +72,16 @@ namespace graph {
 		}
 
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			for(auto it = g.getAdjacent(i); it.first != it.second; ++it.first) {
-				size_t j = *it.first;
+			for(auto it = boost::out_edges(i, g.graph()); it.first != it.second; ++it.first) {
+				size_t j = target(*it.first, g.graph());
 
 				if(i <= j) {
 					file << format("\t<edge source=\"%d\" target=\"%d\" label=\"%s\">\n")
-						% (i+1) % (j+1) % g.edge(i, j).label;
+						% (i+1) % (j+1) % g.edge(*it.first).label;
 
 					for(size_t a = 0; a < ev.count(); ++a) {
 						file << format("\t\t<att name=\"%s\" type=\"%s\" value=\"%s\" />\n")
-							% ev.name(a) % ev.type(a) % ev.value_str(g.edge(i, j), a);
+							% ev.name(a) % ev.type(a) % ev.value_str(g.edge(*it.first), a);
 					}
 					file << "\t</edge>\n";
 				}

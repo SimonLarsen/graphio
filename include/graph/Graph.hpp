@@ -41,8 +41,13 @@ namespace graph {
 				return num_edges(g);
 			}
 
-			inline void addEdge(vertex_descriptor u, vertex_descriptor v) {
-				add_edge(u, v, g);
+			inline edge_descriptor addEdge(vertex_descriptor u, vertex_descriptor v) {
+				std::pair<edge_descriptor, bool> ep = add_edge(u, v, g);
+				return ep.first;
+			}
+
+			inline void addEdge(vertex_descriptor u, vertex_descriptor v, const edge_type &e) {
+				add_edge(u, v, e, g);
 			}
 
 			inline void removeEdge(vertex_descriptor u, vertex_descriptor v) {
@@ -83,15 +88,15 @@ namespace graph {
 			/**
 			 * Get reference to edge's bundled properties.
 			 */
-			inline edge_type &edge(vertex_descriptor u, vertex_descriptor v) {
-				return g[boost::edge(u, v, g).first]; 
+			inline edge_type &edge(edge_descriptor e) {
+				return g[e]; 
 			}
 
 			/**
 			 * Get const reference to edge's bundled properties.
 			 */
-			inline const edge_type &edge(vertex_descriptor u, vertex_descriptor v) const {
-				return g[boost::edge(u, v, g).first]; 
+			inline const edge_type &edge(edge_descriptor e) const {
+				return g[e]; 
 			}
 
 			inline graph_type &graph() {

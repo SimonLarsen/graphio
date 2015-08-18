@@ -78,12 +78,12 @@ namespace graph {
 			int u = boost::lexical_cast<int>(parts[0]) - 1;
 			int v = boost::lexical_cast<int>(parts[1]) - 1;
 
-			g.addEdge(u, v);
-
 			size_t begin = parts[3].find("|{") + 2;
 			size_t end = parts[3].find("}|");
 
-			g.edge(u, v).label = parts[3].substr(begin, end-begin);
+			auto e = g.addEdge(u, v);
+			g.edge(e).label = parts[3].substr(begin, end-begin);
+
 		}
 	}
 
@@ -106,12 +106,12 @@ namespace graph {
 		file << g.edgeCount() << std::endl;
 
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			for(auto it = g.getAdjacent(i); it.first != it.second; ++it.first) {
-				size_t j = *it.first;
+			for(auto it = boost::out_edges(i, g.graph()); it.first != it.second; ++it.first) {
+				size_t j = target(*it.first, g.graph());
 
 				if(i <= j) {
 					file << format("%d %d 0 |{%s}|\n")
-						% (i+1) % (j+1) % g.edge(i, j).label;
+						% (i+1) % (j+1) % g.edge(*it.first).label;
 				}
 			}
 		}

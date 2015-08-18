@@ -58,10 +58,10 @@ namespace graph {
 			int id1 = map[parts[0]];
 			int id2 = map[parts[1]];
 
-			g.addEdge(id1, id2);
+			auto e = g.addEdge(id1, id2);
 
 			if(parts.size() > 2) {
-				g.edge(id1, id2).label = parts[2];
+				g.edge(e).label = parts[2];
 			}
 		}
 		file.close();
@@ -83,18 +83,18 @@ namespace graph {
 		file << "\n";
 
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			for(auto it = g.getAdjacent(i); it.first != it.second; ++it.first) {
-				size_t j = *it.first;
+			for(auto it = boost::out_edges(i, g.graph()); it.first != it.second; ++it.first) {
+				size_t j = target(*it.first, g.graph());
 
 				if(i <= j) {
 					file << g.node(i).label << "\t" << g.node(j).label;
-					if(g.edge(i, j).label.length() > 0) {
-						file << "\t" << g.edge(i, j).label;
+					if(g.edge(*it.first).label.length() > 0) {
+						file << "\t" << g.edge(*it.first).label;
 					} else {
 						file << "\tNA";
 					}
 					for(size_t a = 0; a < ev.count(); ++a) {
-						file << "\t" << ev.value_str(g.edge(i, j), a);
+						file << "\t" << ev.value_str(g.edge(*it.first), a);
 					}
 					file << "\n";
 				}
