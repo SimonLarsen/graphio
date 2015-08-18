@@ -63,8 +63,9 @@ namespace graph {
 		std::ofstream file(filename);
 
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			for(size_t j = i+1; j < g.vertexCount(); ++j) {
-				if(g.hasEdge(i, j)) {
+			for(auto it = g.getAdjacent(i); it.first != it.second; ++it.first) {
+				size_t j = *it.first;
+				if(i <= j) {
 					file << g.node(i).label << " ";
 					if(g.edge(i, j).label.length() > 0) {
 						file << g.edge(i, j).label;

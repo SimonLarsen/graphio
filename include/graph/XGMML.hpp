@@ -72,8 +72,10 @@ namespace graph {
 		}
 
 		for(size_t i = 0; i < g.vertexCount(); ++i) {
-			for(size_t j = i+1; j < g.vertexCount(); ++j) {
-				if(g.hasEdge(i, j)) {
+			for(auto it = g.getAdjacent(i); it.first != it.second; ++it.first) {
+				size_t j = *it.first;
+
+				if(i <= j) {
 					file << format("\t<edge source=\"%d\" target=\"%d\" label=\"%s\">\n")
 						% (i+1) % (j+1) % g.edge(i, j).label;
 

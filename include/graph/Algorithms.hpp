@@ -17,8 +17,9 @@ namespace graph {
 	inline void get_edges(const G &g, std::vector<std::pair<V,V>> &out) {
 		out.clear();
 		for(V u = 0; u < g.vertexCount(); ++u) {
-			for(V v = u+1; v < g.vertexCount(); ++v) {
-				if(g.hasEdge(u, v)) {
+			for(auto it = g.getAdjacent(u); it.first != it.second; ++it.first) {
+				V v = *it.first;
+				if(u <= v) {
 					out.push_back(std::pair<V,V>(u, v));
 				}
 			}
@@ -37,6 +38,15 @@ namespace graph {
 		}
 	}
 
+	template<class G, class V>
+	inline bool has_edge(const G &g, V u, V v) {
+		for(auto it = g.getAdjacent(u); it.first != it.second; ++it.first) {
+			if(*it.first == v) return true;
+		}
+
+		return false;
+	}
+
 	/**
 	 * Creates subgraph from list of vertices.
 	 */
@@ -47,8 +57,9 @@ namespace graph {
 		for(size_t i = 0; i < indices.size(); ++i) {
 			out.node(i) = g.node(indices[i]);
 
-			for(size_t j = i+1; j < indices.size(); ++j) {
-				if(g.hasEdge(indices[i], indices[j])) {
+			for(auto it = g.getAdjacent(i); it.first != it.second; ++it.first) {
+				size_t j = *it.first;
+				if(i <= j) {
 					out.addEdge(i, j);
 				}
 			}
@@ -87,18 +98,16 @@ namespace graph {
 			}
 
 			while(stack.empty() == false) {
-				V v = stack.top();
+				V u = stack.top();
 				stack.pop();
 
-				if(marked[v] == false) {
-					marked[v] = true;
+				if(marked[u] == false) {
+					marked[u] = true;
 					covered++;
-					comp[v] = cur_comp;
+					comp[u] = cur_comp;
 
-					for(size_t u = 0; u < g.vertexCount(); ++u) {
-						if(g.hasEdge(u, v)) {
-							stack.push(u);
-						}
+					for(auto it = g.getAdjacent(u); it.first != it.second; ++it.first) {
+						stack.push(*it.first);
 					}
 				}
 			}
@@ -220,7 +229,7 @@ namespace graph {
 			if(a1 == b1 || a1 == b2
 			|| a2 == b1 || a2 == b2) continue;
 
-			if(g.hasEdge(a1, b2) || g.hasEdge(b1, a2)) continue;
+			if(has_edge(g, a1, b2) || has_edge(g, b1, a2)) continue;
 
 			g.removeEdge(a1, a2);
 			g.removeEdge(b1, b2);
