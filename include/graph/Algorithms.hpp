@@ -41,7 +41,7 @@ namespace graph {
 	template<class G, class V>
 	inline bool has_edge(const G &g, V u, V v) {
 		for(auto it = out_edges(u, g); it.first != it.second; ++it.first) {
-			if(*it.first == v) return true;
+			if((V)target(*it.first, g) == v) return true;
 		}
 
 		return false;
@@ -55,12 +55,12 @@ namespace graph {
 		out = G(indices.size());
 
 		for(size_t i = 0; i < indices.size(); ++i) {
-			out.node(i) = g[indices[i]];
+			out[i] = g[indices[i]];
 
 			for(auto it = out_edges(i, g); it.first != it.second; ++it.first) {
 				size_t j = target(*it.first, g);
 				if(i <= j) {
-					out.addEdge(i, j, g[*it.first]);
+					add_edge(i, j, g[*it.first], out);
 				}
 			}
 		}
@@ -101,7 +101,7 @@ namespace graph {
 					comp[u] = cur_comp;
 
 					for(auto it = out_edges(u, g); it.first != it.second; ++it.first) {
-						stack.push(*it.first);
+						stack.push(target(*it.first, g));
 					}
 				}
 			}

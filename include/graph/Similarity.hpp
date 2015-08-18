@@ -28,16 +28,16 @@ namespace graph {
 		std::map<std::string,int> map1, map2;
 
 		// Make map of all node labels
-		for(size_t i = 0; i < g1.vertexCount(); ++i) {
-			map1[g1.node(i).label] = i;
+		for(size_t i = 0; i < num_vertices(g1); ++i) {
+			map1[g1[i].label] = i;
 		}
 
-		for(size_t i = 0; i < g2.vertexCount(); ++i) {
-			map2[g2.node(i).label] = i;
+		for(size_t i = 0; i < num_vertices(g2); ++i) {
+			map2[g2[i].label] = i;
 		}
 
 		// Zero similarity matrix
-		sim.resize(g1.vertexCount(), g2.vertexCount());
+		sim.resize(num_vertices(g1), num_vertices(g2));
 		for(auto it1 = sim.begin1(); it1 != sim.end1(); ++it1) {
 			std::fill(it1.begin(), it1.end(), 0.0f);
 		}
