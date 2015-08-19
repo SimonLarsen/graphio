@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <graph/Graph.hpp>
 
+#include <iostream>
+
 namespace graph {
 	/**
 	 * Get list of edges as vertex pairs.
@@ -16,13 +18,11 @@ namespace graph {
 	template<class G, class V>
 	inline void get_edges(const G &g, std::vector<std::pair<V,V>> &out) {
 		out.clear();
-		for(V u = 0; u < num_vertices(g); ++u) {
-			for(auto it = out_edges(u, g); it.first != it.second; ++it.first) {
-				V v = target(*it.first, g);
-				if(u <= v) {
-					out.push_back(std::pair<V,V>(u, v));
-				}
-			}
+		for(auto it = boost::edges(g); it.first != it.second; ++it.first) {
+			V u = source(*it.first, g);
+			V v = target(*it.first, g);
+
+			out.push_back(std::pair<V,V>(u, v));
 		}
 	}
 
@@ -39,12 +39,24 @@ namespace graph {
 	}
 
 	template<class G, class V>
-	inline bool has_edge(const G &g, V u, V v) {
+	inline bool is_adjacent(const G &g, V u, V v) {
 		for(auto it = out_edges(u, g); it.first != it.second; ++it.first) {
 			if((V)target(*it.first, g) == v) return true;
 		}
 
 		return false;
+	}
+
+	template<class G>
+	inline void removeEdgeLoops(G &g) {
+		typedef typename boost::graph_traits<G>::edge_descriptor edge_descriptor;
+
+		remove_edge_if([&g](
+			const edge_descriptor &e) {
+				return source(e, g) == target(e, g);
+			},
+			g
+		);
 	}
 
 	/**
@@ -54,14 +66,27 @@ namespace graph {
 	inline void subgraph(const G &g, const std::vector<V> &indices, G &out) {
 		out = G(indices.size());
 
-		for(size_t i = 0; i < indices.size(); ++i) {
-			out[i] = g[indices[i]];
+		// Create reverse mapping
+		std::vector<V> map(num_vertices(g), num_vertices(g));
+		for(V i = 0; i < indices.size(); ++i) {
+			map[indices[i]] = i;
+		}
 
-			for(auto it = out_edges(i, g); it.first != it.second; ++it.first) {
-				size_t j = target(*it.first, g);
-				if(i <= j) {
-					add_edge(i, j, g[*it.first], out);
-				}
+		// Extract vertices
+		for(V i = 0; i < indices.size(); ++i) {
+			out[i] = g[indices[i]];
+		}
+
+		// Add edges
+		for(auto it = edges(g); it.first != it.second; ++it.first) {
+			V u = source(*it.first, g);
+			V v = target(*it.first, g);
+
+			V i = map[u];
+			V j = map[v];
+
+			if(i != num_vertices(g) && j != num_vertices(g)) {
+				add_edge(i, j, g[*it.first], out);
 			}
 		}
 	}
@@ -223,7 +248,7 @@ namespace graph {
 			if(a1 == b1 || a1 == b2
 			|| a2 == b1 || a2 == b2) continue;
 
-			if(has_edge(g, a1, b2) || has_edge(g, b1, a2)) continue;
+			if(is_adjacent(g, a1, b2) || is_adjacent(g, b1, a2)) continue;
 
 			remove_edge(a1, a2, g);
 			remove_edge(b1, b2, g);
