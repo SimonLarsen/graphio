@@ -5,21 +5,13 @@
 #include <boost/graph/adjacency_list.hpp>
 
 namespace graph {
-	struct Vertex {
+	struct LabeledVertex {
 		std::string label;
 	};
 
-	struct Edge {
+	struct LabeledEdge {
 		std::string label;
 	};
-
-	typedef boost::adjacency_list<
-		boost::vecS,
-		boost::vecS,
-		boost::undirectedS,
-		Vertex,
-		Edge
-	> Graph;
 }
 
 #endif
