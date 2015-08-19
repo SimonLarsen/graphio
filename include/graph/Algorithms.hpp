@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stack>
+#include <map>
 #include <random>
 #include <algorithm>
 #include <graph/Graph.hpp>
@@ -67,7 +68,7 @@ namespace graph {
 		out = G(indices.size());
 
 		// Create reverse mapping
-		std::vector<V> map(num_vertices(g), num_vertices(g));
+		std::map<V,V> map;
 		for(V i = 0; i < indices.size(); ++i) {
 			map[indices[i]] = i;
 		}
@@ -82,10 +83,13 @@ namespace graph {
 			V u = source(*it.first, g);
 			V v = target(*it.first, g);
 
-			V i = map[u];
-			V j = map[v];
+			auto it_i = map.find(u);
+			auto it_j = map.find(v);
 
-			if(i != num_vertices(g) && j != num_vertices(g)) {
+			if(it_i != map.end() && it_j != map.end()) {
+				size_t i = it_i->second;
+				size_t j = it_j->second;
+
 				add_edge(i, j, g[*it.first], out);
 			}
 		}
