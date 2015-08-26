@@ -7,6 +7,7 @@
 #include <random>
 #include <algorithm>
 #include <graph/Graph.hpp>
+#include <boost/graph/connected_components.hpp>
 
 #include <iostream>
 
@@ -101,42 +102,12 @@ namespace graph {
 	 *
 	 * \param g Graph
 	 * \param comp Output buffer
-	 * \return List mapping each vertex to component
+	 * \return Number of components found
 	 */
 	template<class G, class V>
-	inline void connectedComponents(const G &g, std::vector<V> &comp) {
+	inline void connectedComponents(const G &g, std::vector<int> &comp) {
 		comp.resize(num_vertices(g));
-		std::stack<V> stack;
-
-		std::vector<bool> marked(num_vertices(g), false);
-
-		size_t covered = 0;
-		int cur_comp = 0;
-		while(covered < num_vertices(g)) {
-			for(size_t i = 0; i < num_vertices(g); ++i) {
-				if(marked[i] == false) {
-					stack.push(i);
-					break;
-				}
-			}
-
-			while(stack.empty() == false) {
-				V u = stack.top();
-				stack.pop();
-
-				if(marked[u] == false) {
-					marked[u] = true;
-					covered++;
-					comp[u] = cur_comp;
-
-					for(auto it = out_edges(u, g); it.first != it.second; ++it.first) {
-						stack.push(target(*it.first, g));
-					}
-				}
-			}
-
-			cur_comp++;
-		}
+		return boost::connected_components(g, &comp[0]);
 	}
 
 	/**
@@ -151,7 +122,7 @@ namespace graph {
 	inline void filterComponents(const G &g, int min_size, G &out) {
 		typedef typename G::vertex_descriptor V;
 
-		std::vector<V> comp;
+		std::vector<int> comp;
 		connectedComponents(g, comp);
 
 		std::vector<int> count(num_vertices(g), 0);
@@ -175,7 +146,7 @@ namespace graph {
 	 */
 	template<class G, class V>
 	inline void largestComponentIndices(const G &g, std::vector<V> &indices) {
-		std::vector<V> comp;
+		std::vector<int> comp;
 		connectedComponents(g, comp);
 
 		std::vector<int> count(num_vertices(g), 0);
