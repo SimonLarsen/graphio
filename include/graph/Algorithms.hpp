@@ -104,8 +104,8 @@ namespace graph {
 	 * \param comp Output buffer
 	 * \return Number of components found
 	 */
-	template<class G, class V>
-	inline void connectedComponents(const G &g, std::vector<int> &comp) {
+	template<class G>
+	inline int connectedComponents(const G &g, std::vector<int> &comp) {
 		comp.resize(num_vertices(g));
 		return boost::connected_components(g, &comp[0]);
 	}
@@ -156,7 +156,7 @@ namespace graph {
 			count[i]++;
 		}
 
-		size_t largest = 0;
+		int largest = 0;
 		for(size_t i = 0; i < num_vertices(g); ++i) {
 			if(count[i] > count[largest]) {
 				largest = i;
