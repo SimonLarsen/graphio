@@ -28,16 +28,14 @@ namespace graph {
 			if(line.length() == 0) continue;
 			boost::split(parts, line, boost::is_any_of(" \t"));
 
-			it1 = map.find(parts[0]);
-			it2 = map.find(parts[2]);
+			for(size_t i = 0; i  < parts.size(); ++i) {
+				if(i == 1) continue;
 
-			if(it1 == map.end()) {
-				map[parts[0]] = id;
-				id++;
-			}
-			else if(it2 == map.end()) {
-				map[parts[2]] = id;
-				id++;
+				it1 = map.find(parts[i]);
+				if(it1 == map.end()) {
+					map[parts[i]] = id;
+					id++;
+				}
 			}
 		}
 
@@ -55,11 +53,14 @@ namespace graph {
 			if(line.length() == 0) continue;
 			boost::split(parts, line, boost::is_any_of(" \t"));
 
-			int id1 = map[parts[0]];
-			int id2 = map[parts[2]];
+			if(parts.size() < 3) continue;
 
-			auto e = add_edge(id1, id2, g);
-			g[e.first].label = parts[1];
+			int id1 = map[parts[0]];
+			for(size_t i = 2; i < parts.size(); ++i) {
+				int id2 = map[parts[i]];
+				auto e = add_edge(id1, id2, g);
+				g[e.first].label = parts[1];
+			}
 		}
 	}
 
