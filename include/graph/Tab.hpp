@@ -16,6 +16,9 @@ namespace graph {
 		std::map<std::string, int> map;
 
 		file.open(filename);
+		if(!file.good()) {
+			throw GraphException(std::string("Could not open file: ") + filename);
+		}
 
 		// Skip header line
 		std::getline(file, line);
@@ -75,6 +78,9 @@ namespace graph {
 			const EV &ev
 		) {
 		std::ofstream file(filename);
+		if(!file.good()) {
+			throw GraphException(std::string("Could not open file: ") + filename);
+		}
 
 		file << "INTERACTOR_A\tINTERACTOR_B\tlabel";
 		for(size_t a = 0; a < ev.count(); ++a) {

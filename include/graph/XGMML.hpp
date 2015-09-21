@@ -52,6 +52,9 @@ namespace graph {
 		using boost::format;
 
 		std::ofstream file(filename);
+		if(!file.good()) {
+			throw GraphException(std::string("Could not open file: ") + filename);
+		}
 		
 		file << "<?xml version=\"1.0\"?>\n";
 

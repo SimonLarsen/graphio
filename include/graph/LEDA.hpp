@@ -27,6 +27,9 @@ namespace graph {
 		std::string line;
 		size_t n, m;
 		std::ifstream file(filename);
+		if(!file.good()) {
+			throw GraphException(std::string("Could not open file: ") + filename);
+		}
 
 		if(file.is_open() == false) {
 			throw GraphException("Could not open file: " + filename);
@@ -92,6 +95,9 @@ namespace graph {
 		using boost::format;
 
 		std::ofstream file(filename);
+		if(!file.good()) {
+			throw GraphException(std::string("Could not open file: ") + filename);
+		}
 
 		file << "LEDA.GRAPH" << std::endl;
 		file << "string" << std::endl;

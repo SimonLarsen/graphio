@@ -19,6 +19,11 @@ namespace graph {
 		int id = 0;
 		std::map<std::string, int>::iterator it1, it2;
 		file.open(filename);
+
+		if(!file.good()) {
+			throw GraphException(std::string("Could not open file: ") + filename);
+		}
+
 		while(std::getline(file, line)) {
 			if(line.length() == 0) continue;
 			boost::split(parts, line, boost::is_any_of(" \t"));
@@ -61,6 +66,9 @@ namespace graph {
 	template<class G>
 	inline void writeSIFFile(const G &g, const std::string &filename) {
 		std::ofstream file(filename);
+		if(!file.good()) {
+			throw GraphException(std::string("Could not open file: ") + filename);
+		}
 
 		for(size_t i = 0; i < num_vertices(g); ++i) {
 			for(auto it = out_edges(i, g); it.first != it.second; ++it.first) {
