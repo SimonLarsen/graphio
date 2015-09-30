@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <stdexcept>
 #include <fstream>
 #include <algorithm>
 #include <boost/lexical_cast.hpp>
@@ -22,6 +23,12 @@ namespace graph {
 		float max_value = 1.0f
 	) {
 		std::ifstream file(filename);
+		if(!file.good()) {
+			throw std::runtime_error(
+				std::string("Could not open file: ") + filename
+			);
+		}
+
 		std::string line;
 		std::vector<std::string> parts;
 
