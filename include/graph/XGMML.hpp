@@ -4,8 +4,11 @@
 #include <string>
 #include <map>
 #include <boost/format.hpp>
+#include <boost/graph/graph_traits.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
+#include <graph/utility/basename.hpp>
+#include <graph/GraphException.hpp>
 
 namespace graph {
 	template<class G>
@@ -24,6 +27,7 @@ namespace graph {
 		}
 
 		g = G(n);
+		g[boost::graph_bundle].label = pt.get<std::string>("graph.<xmlattr>.label");
 
 		for(auto &c : pt.get_child("graph")) {
 			if(c.first == "node") {
@@ -58,7 +62,7 @@ namespace graph {
 		
 		file << "<?xml version=\"1.0\"?>\n";
 
-		file << "<graph label=\"" << filename << "\" ";
+		file << "<graph label=\"" << g[boost::graph_bundle].label << "\" ";
 		file << "xmlns:dc=\"http://purl.org/dc/elements/1.1/\" ";
 		file << "xmlns:xlink=\"http://www.w3.org/1999/xlink\" ";
 		file << "xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" ";

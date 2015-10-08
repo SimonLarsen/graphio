@@ -4,7 +4,14 @@
 #include <graph/GraphWriter.hpp>
 
 int main(int argc, const char *argv[]) {
-	graph::Graph g;
+	boost::adjacency_list<
+		boost::setS,
+		boost::vecS,
+		boost::undirectedS,
+		graph::LabeledVertex,
+		graph::LabeledEdge,
+		graph::LabeledGraph
+	> g(0);
 
 	if(argc != 3) {
 		std::cerr << "error: Invalid number of arguments." << std::endl;

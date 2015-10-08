@@ -7,7 +7,8 @@
 #include <boost/format.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
-#include <graph/Graph.hpp>
+#include <boost/graph/graph_traits.hpp>
+#include <graph/utility/basename.hpp>
 #include <graph/GraphException.hpp>
 
 namespace graph {
@@ -53,6 +54,7 @@ namespace graph {
 		n = boost::lexical_cast<size_t>(line);
 
 		g = G(n);
+		g[boost::graph_bundle].label = basename(filename);
 
 		// Read nodes
 		for(size_t i = 0; i < n; ++i) {

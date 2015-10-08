@@ -6,6 +6,8 @@
 #include <map>
 #include <fstream>
 #include <boost/algorithm/string.hpp>
+#include <boost/graph/graph_traits.hpp>
+#include <graph/utility/basename.hpp>
 
 namespace graph {
 	template<class G>
@@ -40,6 +42,7 @@ namespace graph {
 		}
 
 		g = G(map.size());
+		g[boost::graph_bundle].label = basename(filename);
 
 		// Set vertex labels
 		for(auto it = map.begin(); it != map.end(); ++it) {

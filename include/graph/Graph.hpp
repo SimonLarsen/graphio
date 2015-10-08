@@ -12,6 +12,10 @@ namespace graph {
 	struct LabeledEdge {
 		std::string label;
 	};
+
+	struct LabeledGraph {
+		std::string label;
+	};
 }
 
 #endif
