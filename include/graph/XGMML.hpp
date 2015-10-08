@@ -62,7 +62,11 @@ namespace graph {
 		
 		file << "<?xml version=\"1.0\"?>\n";
 
-		file << "<graph label=\"" << g[boost::graph_bundle].label << "\" ";
+		if(g[boost::graph_bundle].label.size() > 0) {
+			file << "<graph label=\"" << g[boost::graph_bundle].label << "\" ";
+		} else {
+			file << "<graph label=\"" << basename(filename) << "\" ";
+		}
 		file << "xmlns:dc=\"http://purl.org/dc/elements/1.1/\" ";
 		file << "xmlns:xlink=\"http://www.w3.org/1999/xlink\" ";
 		file << "xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" ";
