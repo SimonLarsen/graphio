@@ -74,6 +74,9 @@ namespace graph {
 			map[indices[i]] = i;
 		}
 
+		// Copy graph properties
+		out[boost::graph_bundle] = g[boost::graph_bundle];
+
 		// Extract vertices
 		for(V i = 0; i < indices.size(); ++i) {
 			out[i] = g[indices[i]];
