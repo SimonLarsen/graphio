@@ -28,7 +28,7 @@ namespace graph {
 
 		while(std::getline(file, line)) {
 			if(line.length() == 0) continue;
-			escaped_split(line, "\t", parts);
+			escaped_split(line, " \t", parts);
 
 			for(size_t i = 0; i  < parts.size(); ++i) {
 				if(i == 1) continue;
@@ -54,7 +54,7 @@ namespace graph {
 		file.open(filename);
 		while(std::getline(file, line)) {
 			if(line.length() == 0) continue;
-			escaped_split(line, "\t", parts);
+			escaped_split(line, " \t", parts);
 
 			if(parts.size() < 3) continue;
 
