@@ -5,9 +5,9 @@
 #include <vector>
 #include <map>
 #include <fstream>
-#include <boost/algorithm/string.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <graph/utility/basename.hpp>
+#include <graph/utility/split.hpp>
 
 namespace graph {
 	template<class G>
@@ -28,7 +28,7 @@ namespace graph {
 
 		while(std::getline(file, line)) {
 			if(line.length() == 0) continue;
-			boost::split(parts, line, boost::is_any_of(" \t"));
+			escaped_split(line, "\t", parts);
 
 			for(size_t i = 0; i  < parts.size(); ++i) {
 				if(i == 1) continue;
@@ -54,7 +54,7 @@ namespace graph {
 		file.open(filename);
 		while(std::getline(file, line)) {
 			if(line.length() == 0) continue;
-			boost::split(parts, line, boost::is_any_of(" \t"));
+			escaped_split(line, "\t", parts);
 
 			if(parts.size() < 3) continue;
 

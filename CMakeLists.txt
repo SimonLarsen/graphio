@@ -9,4 +9,6 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/include
 )
 
-add_subdirectory(src)
+add_executable(convert
+	${CMAKE_SOURCE_DIR}/src/Convert.cpp
+)

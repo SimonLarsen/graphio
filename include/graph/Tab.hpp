@@ -6,8 +6,8 @@
 #include <map>
 #include <fstream>
 #include <boost/graph/graph_traits.hpp>
-#include <boost/algorithm/string.hpp>
 #include <graph/utility/basename.hpp>
+#include <graph/utility/split.hpp>
 
 namespace graph {
 	template<class G>
@@ -30,7 +30,7 @@ namespace graph {
 		std::map<std::string, int>::iterator it1, it2;
 		while(std::getline(file, line)) {
 			if(line.length() == 0) continue;
-			boost::split(parts, line, boost::is_any_of("\t"));
+			escaped_split(line, "\t", parts);
 
 			it1 = map.find(parts[0]);
 			it2 = map.find(parts[1]);
@@ -59,7 +59,7 @@ namespace graph {
 		std::getline(file, line);
 		while(std::getline(file, line)) {
 			if(line.length() == 0) continue;
-			boost::split(parts, line, boost::is_any_of("\t"));
+			escaped_split(line, "\t", parts);
 
 			int id1 = map[parts[0]];
 			int id2 = map[parts[1]];
