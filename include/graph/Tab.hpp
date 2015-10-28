@@ -32,6 +32,10 @@ namespace graph {
 			if(line.length() == 0) continue;
 			escaped_split(line, "\t", parts);
 
+			if(parts.size() < 2) {
+				throw GraphException(std::string("Too few columns in line: ") + line);
+			}
+
 			it1 = map.find(parts[0]);
 			it2 = map.find(parts[1]);
 
