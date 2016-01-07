@@ -1,10 +1,10 @@
-#ifndef GRAPH_GRAPHTYPES_HPP
-#define GRAPH_GRAPHTYPES_HPP
+#ifndef GRAPHIO_GRAPHTYPES_HPP
+#define GRAPHIO_GRAPHTYPES_HPP
 
 #include <string>
 #include <boost/algorithm/string/predicate.hpp>
 
-namespace graph {
+namespace graphio {
 	enum Type {
 		NONE,
 		LEDA,

@@ -1,9 +1,9 @@
-#ifndef GRAPH_EDGEVISITOR_HPP
-#define GRAPH_EDGEVISITOR_HPP 
+#ifndef GRAPHIO_EDGEVISITOR_HPP
+#define GRAPHIO_EDGEVISITOR_HPP 
 
 #include <string>
 
-namespace graph {
+namespace graphio {
 	class EdgeVisitor {
 		public:
 			inline size_t count() const {

@@ -1,15 +1,16 @@
-#ifndef GRAPH_TAB_HPP
-#define GRAPH_TAB_HPP
+#ifndef GRAPHIO_FORMATS_TAB_HPP
+#define GRAPHIO_FORMATS_TAB_HPP
 
 #include <string>
 #include <vector>
 #include <map>
 #include <fstream>
 #include <boost/graph/graph_traits.hpp>
-#include <graph/utility/basename.hpp>
-#include <graph/utility/split.hpp>
+#include <graphio/utility/basename.hpp>
+#include <graphio/utility/split.hpp>
+#include <graphio/GraphIOException.hpp>
 
-namespace graph {
+namespace graphio {
 	template<class G>
 	inline void readTabFile(const std::string &filename, G &g) {
 		std::ifstream file;
@@ -19,7 +20,7 @@ namespace graph {
 
 		file.open(filename);
 		if(!file.good()) {
-			throw GraphException(std::string("Could not open file: ") + filename);
+			throw GraphIOException(std::string("Could not open file: ") + filename);
 		}
 
 		// Skip header line
@@ -33,7 +34,7 @@ namespace graph {
 			escaped_split(line, "\t", parts);
 
 			if(parts.size() < 2) {
-				throw GraphException(std::string("Too few columns in line: ") + line);
+				throw GraphIOException(std::string("Too few columns in line: ") + line);
 			}
 
 			it1 = map.find(parts[0]);
@@ -86,7 +87,7 @@ namespace graph {
 		) {
 		std::ofstream file(filename);
 		if(!file.good()) {
-			throw GraphException(std::string("Could not open file: ") + filename);
+			throw GraphIOException(std::string("Could not open file: ") + filename);
 		}
 
 		file << "INTERACTOR_A\tINTERACTOR_B\tlabel";

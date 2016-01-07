@@ -1,7 +1,7 @@
-libgraph
+GraphIO
 ========
 
-Small utility library extending boost::graph::adjacency_matrix for working with undirected graphs.
+Small utility library for reading/writing common network types with Boost adjacency lists.
 
 ### Compilation ###
 
@@ -9,8 +9,8 @@ The library itself is header only.
 To compile the included conversion tool `convert` run:
 
 ```
-git clone https://github.com/SimonLarsen/libgraph.git
-cd libgraph
+git clone https://github.com/SimonLarsen/graphio.git
+cd graphio
 cmake . -DCMAKE_BUILD_TYPE=Release
 make
 ```

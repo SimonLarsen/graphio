@@ -1,17 +1,17 @@
-#ifndef GRAPH_GRAPHWRITER_HPP
-#define GRAPH_GRAPHWRITER_HPP
+#ifndef GRAPHIO_GRAPHWRITER_HPP
+#define GRAPHIO_GRAPHWRITER_HPP
 
 #include <string>
-#include <graph/LEDA.hpp>
-#include <graph/SIF.hpp>
-#include <graph/XGMML.hpp>
-#include <graph/Tab.hpp>
-#include <graph/GraphException.hpp>
-#include <graph/GraphTypes.hpp>
-#include <graph/VertexVisitor.hpp>
-#include <graph/EdgeVisitor.hpp>
+#include <graphio/GraphIOException.hpp>
+#include <graphio/GraphTypes.hpp>
+#include <graphio/VertexVisitor.hpp>
+#include <graphio/EdgeVisitor.hpp>
+#include <graphio/formats/LEDA.hpp>
+#include <graphio/formats/SIF.hpp>
+#include <graphio/formats/XGMML.hpp>
+#include <graphio/formats/Tab.hpp>
 
-namespace graph {
+namespace graphio {
 	template<typename G>
 	inline void writeGraph(
 		const G &g,
@@ -45,7 +45,7 @@ namespace graph {
 				writeTabFile(g, filename, vv, ev);
 				break;
 			default:
-				throw GraphException("Unknown filetype for file: " + filename);
+				throw GraphIOException("Unknown filetype for file: " + filename);
 		}
 	}
 }

@@ -1,16 +1,16 @@
 #include <iostream>
-#include <graph/Graph.hpp>
-#include <graph/GraphReader.hpp>
-#include <graph/GraphWriter.hpp>
+#include <graphio/Graph.hpp>
+#include <graphio/GraphReader.hpp>
+#include <graphio/GraphWriter.hpp>
 
 int main(int argc, const char *argv[]) {
 	boost::adjacency_list<
 		boost::setS,
 		boost::vecS,
 		boost::undirectedS,
-		graph::LabeledVertex,
-		graph::LabeledEdge,
-		graph::LabeledGraph
+		graphio::LabeledVertex,
+		graphio::LabeledEdge,
+		graphio::LabeledGraph
 	> g(0);
 
 	if(argc != 3) {
@@ -19,8 +19,8 @@ int main(int argc, const char *argv[]) {
 		return 1;
 	}
 
-	graph::readGraph(argv[1], g);
-	graph::writeGraph(g, argv[2]);
+	graphio::readGraph(argv[1], g);
+	graphio::writeGraph(g, argv[2]);
 
 	return 0;
 }

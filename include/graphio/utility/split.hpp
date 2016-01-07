@@ -1,12 +1,12 @@
-#ifndef GRAPH_UTILITY_SPLIT_HPP
-#define GRAPH_UTILITY_SPLIT_HPP 
+#ifndef GRAPHIO_UTILITY_SPLIT_HPP
+#define GRAPHIO_UTILITY_SPLIT_HPP 
 
 #include <string>
 #include <vector>
 #include <boost/tokenizer.hpp>
 #include <boost/algorithm/string.hpp>
 
-namespace graph {
+namespace graphio {
 	void escaped_split(const std::string &str, const std::string &sep, std::vector<std::string> &parts) {
 		boost::escaped_list_separator<char> els("\\", sep, "\"");
 		boost::tokenizer<boost::escaped_list_separator<char>> tokens(str, els);

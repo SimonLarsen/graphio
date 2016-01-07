@@ -1,5 +1,5 @@
-#ifndef GRAPH_XGMML_HPP
-#define GRAPH_XGMML_HPP
+#ifndef GRAPHIO_FORMATS_XGMML_HPP
+#define GRAPHIO_FORMATS_XGMML_HPP
 
 #include <string>
 #include <map>
@@ -7,10 +7,10 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
-#include <graph/utility/basename.hpp>
-#include <graph/GraphException.hpp>
+#include <graphio/utility/basename.hpp>
+#include <graphio/GraphIOException.hpp>
 
-namespace graph {
+namespace graphio {
 	template<class G>
 	inline void readXGMMLFile(const std::string &filename, G &g) {
 		typedef typename G::vertex_descriptor V;
@@ -57,7 +57,7 @@ namespace graph {
 
 		std::ofstream file(filename);
 		if(!file.good()) {
-			throw GraphException(std::string("Could not open file: ") + filename);
+			throw GraphIOException(std::string("Could not open file: ") + filename);
 		}
 		
 		file << "<?xml version=\"1.0\"?>\n";

@@ -1,15 +1,15 @@
-#ifndef GRAPH_GRAPHREADER_HPP
-#define GRAPH_GRAPHREADER_HPP
+#ifndef GRAPHIO_GRAPHREADER_HPP
+#define GRAPHIO_GRAPHREADER_HPP
 
 #include <string>
-#include <graph/GraphException.hpp>
-#include <graph/GraphTypes.hpp>
-#include <graph/LEDA.hpp>
-#include <graph/SIF.hpp>
-#include <graph/XGMML.hpp>
-#include <graph/Tab.hpp>
+#include <graphio/GraphIOException.hpp>
+#include <graphio/GraphTypes.hpp>
+#include <graphio/formats/LEDA.hpp>
+#include <graphio/formats/SIF.hpp>
+#include <graphio/formats/XGMML.hpp>
+#include <graphio/formats/Tab.hpp>
 
-namespace graph {
+namespace graphio {
 	template<typename G>
 	inline void readGraph(const std::string &filename, G &g) {
 		Type type = graphFileType(filename);
@@ -28,7 +28,7 @@ namespace graph {
 				readTabFile(filename, g);
 				break;
 			default:
-				throw GraphException("Unknown filetype for file: " + filename);
+				throw GraphIOException("Unknown filetype for file: " + filename);
 		}
 	}
 }

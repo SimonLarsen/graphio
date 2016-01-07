@@ -1,5 +1,5 @@
-#ifndef GRAPH_LEDA_HPP
-#define GRAPH_LEDA_HPP
+#ifndef GRAPHIO_FORMATS_LEDA_HPP
+#define GRAPHIO_FORMATS_LEDA_HPP
 
 #include <string>
 #include <fstream>
@@ -8,10 +8,10 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/graph/graph_traits.hpp>
-#include <graph/utility/basename.hpp>
-#include <graph/GraphException.hpp>
+#include <graphio/utility/basename.hpp>
+#include <graphio/GraphIOException.hpp>
 
-namespace graph {
+namespace graphio {
 	namespace {
 		inline std::istream &LEDAReadLine(std::istream &is, std::string &str) {
 			do {
@@ -29,17 +29,17 @@ namespace graph {
 		size_t n, m;
 		std::ifstream file(filename);
 		if(!file.good()) {
-			throw GraphException(std::string("Could not open file: ") + filename);
+			throw GraphIOException(std::string("Could not open file: ") + filename);
 		}
 
 		if(file.is_open() == false) {
-			throw GraphException("Could not open file: " + filename);
+			throw GraphIOException("Could not open file: " + filename);
 		}
 
 		// Look for header string
 		LEDAReadLine(file, line);
 		if(boost::algorithm::equals(line, "LEDA.GRAPH") == false) {
-			throw GraphException("\"LEDA.GRAPH\" header not found");
+			throw GraphIOException("\"LEDA.GRAPH\" header not found");
 		}
 
  		// Node type
@@ -64,7 +64,7 @@ namespace graph {
 			size_t end = line.find("}|");
 
 			if(begin == std::string::npos || end == std::string::npos || end <= begin) {
-				throw GraphException("Malformed node label: " + line);
+				throw GraphIOException("Malformed node label: " + line);
 			}
 
 			g[i].label = line.substr(begin, end-begin);
@@ -98,7 +98,7 @@ namespace graph {
 
 		std::ofstream file(filename);
 		if(!file.good()) {
-			throw GraphException(std::string("Could not open file: ") + filename);
+			throw GraphIOException(std::string("Could not open file: ") + filename);
 		}
 
 		file << "LEDA.GRAPH" << std::endl;

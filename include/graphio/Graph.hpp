@@ -1,10 +1,10 @@
-#ifndef GRAPH_GRAPH_HPP
-#define GRAPH_GRAPH_HPP 
+#ifndef GRAPHIO_GRAPH_HPP
+#define GRAPHIO_GRAPH_HPP 
 
 #include <utility>
 #include <boost/graph/adjacency_list.hpp>
 
-namespace graph {
+namespace graphio {
 	struct LabeledVertex {
 		std::string label;
 	};

@@ -1,9 +1,9 @@
-#ifndef GRAPH_VERTEXVISITOR_HPP
-#define GRAPH_VERTEXVISITOR_HPP 
+#ifndef GRAPHIO_VERTEXVISITOR_HPP
+#define GRAPHIO_VERTEXVISITOR_HPP 
 
 #include <string>
 
-namespace graph {
+namespace graphio {
 	class VertexVisitor {
 		public:
 			inline size_t count() const {

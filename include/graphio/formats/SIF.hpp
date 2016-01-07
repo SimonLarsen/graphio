@@ -1,15 +1,16 @@
-#ifndef GRAPH_SIF_HPP
-#define GRAPH_SIF_HPP
+#ifndef GRAPHIO_FORMATS_SIF_HPP
+#define GRAPHIO_FORMATS_SIF_HPP
 
 #include <string>
 #include <vector>
 #include <map>
 #include <fstream>
 #include <boost/graph/graph_traits.hpp>
-#include <graph/utility/basename.hpp>
-#include <graph/utility/split.hpp>
+#include <graphio/utility/basename.hpp>
+#include <graphio/utility/split.hpp>
+#include <graphio/GraphIOException.hpp>
 
-namespace graph {
+namespace graphio {
 	template<class G>
 	inline void readSIFFile(const std::string &filename, G &g) {
 		std::ifstream file;
@@ -23,7 +24,7 @@ namespace graph {
 		file.open(filename);
 
 		if(!file.good()) {
-			throw GraphException(std::string("Could not open file: ") + filename);
+			throw GraphIOException(std::string("Could not open file: ") + filename);
 		}
 
 		while(std::getline(file, line)) {
@@ -71,7 +72,7 @@ namespace graph {
 	inline void writeSIFFile(const G &g, const std::string &filename) {
 		std::ofstream file(filename);
 		if(!file.good()) {
-			throw GraphException(std::string("Could not open file: ") + filename);
+			throw GraphIOException(std::string("Could not open file: ") + filename);
 		}
 
 		for(size_t i = 0; i < num_vertices(g); ++i) {
