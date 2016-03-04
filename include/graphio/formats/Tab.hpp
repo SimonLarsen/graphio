@@ -44,7 +44,7 @@ namespace graphio {
 				map[parts[0]] = id;
 				id++;
 			}
-			else if(it2 == map.end()) {
+			if(it2 == map.end()) {
 				map[parts[1]] = id;
 				id++;
 			}
